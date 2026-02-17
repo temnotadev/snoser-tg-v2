@@ -10,35 +10,7 @@ import json
 import subprocess
 import os
 import sys
-import http.server
-import socketserver
-import threading
-import time
-import string
 
-# ========== HTTP-СЕРВЕР ДЛЯ RENDER (самопинг) ==========
-# ВАЖНО: Этот сервер НЕ использует Telegram API.
-# Он просто отвечает на HTTP-запросы Render, чтобы бот не засыпал.
-def run_http_server():
-    """Запускает простой HTTP-сервер, Render пингует его, бот не конфликтует"""
-    port = int(os.environ.get('PORT', 8080))
-    handler = http.server.SimpleHTTPRequestHandler
-    try:
-        with socketserver.TCPServer(("", port), handler) as httpd:
-            print(f"✅ HTTP server running on port {port}")
-            print(f"✅ Render will ping this, bot stays alive without conflicts")
-            httpd.serve_forever()
-    except Exception as e:
-        print(f"⚠️ HTTP server error: {e}")
-
-# Запускаем сервер в фоновом потоке
-# daemon=True означает, что сервер умрет, когда умрет основной бот
-http_thread = threading.Thread(target=run_http_server, daemon=True)
-http_thread.start()
-print("🟢 HTTP Server thread started (no Telegram API used)")
-
-# ========== ОСНОВНОЙ КОД БОТА ==========
-# ВЕСЬ ТВОЙ ОРИГИНАЛЬНЫЙ КОД БЕЗ ИЗМЕНЕНИЙ
 username = ""
 num3 = ""
 num2 = ""
@@ -133,32 +105,60 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 number = +79999999999
 
+
+
+# ASCII-арт приветствия
+
 def generate_phone_number():
+    
     country_codes = ['+7', '+380', '+375']
+    
+   
     country_code = random.choice(country_codes)
+    
+ 
     phone_number = ''.join(random.choices('0123456789', k=10))
+    
     formatted_phone_number = f'{country_code}{phone_number}'
+    
     return formatted_phone_number
 
+import string
+
 def generate_random_email():
+   
+      
     domains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com", "mail.ru"]
+    
     username = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))  
     domain = random.choice(domains) 
+    
     email = f"{username}@{domain}"  
+    
     return email
     
 def generate_phone_number1():
+  
     country_codes = ['+7', '+380', '+375']
+    
+    
     country_code = random.choice(country_codes)
+    
     phone_number = ''.join(random.choices('0123456789', k=10))
+    
+  
     formatted_phone_number = f'{country_code}{phone_number}'
+    
     return formatted_phone_number
 
 def generate_random_email1():
     domains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com", "mail.ru"]
+    
     username = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))  
     domain = random.choice(domains)  
+    
     email = f"{username}@{domain}"  
+    
     return email
     
 def send_complaint(username, telegram_id, number, email, repeats, complaint_choice, proxies=None):
@@ -202,6 +202,7 @@ def send_complaint(username, telegram_id, number, email, repeats, complaint_choi
     except Exception as e:
         print("An error occurred:", str(e))
 
+
 def snos():
         complaint_choice = num1
         telegram_id = num2
@@ -210,7 +211,7 @@ def snos():
             number = generate_phone_number()
             email = generate_random_email()
             proxies_list = [
-                '8.218.149.193:80',
+            '8.218.149.193:80',
             '47.57.233.126:80',
             '47.243.70.197:80',
             '8.222.193.208:80',
@@ -55646,6 +55647,7 @@ def snos():
             send_complaint(username, telegram_id, number, email, 1, complaint_choice, proxies)
 
 
+
 def main():
     TOKEN = "8335371990:AAHj9Kqbdwi7Tfn6NQOibkpvNB8kQg4PQxc"
 
@@ -55655,8 +55657,7 @@ def main():
     app.add_handler(CallbackQueryHandler(button_click))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    print("🤖 Bot is running with HTTP server (no self-ping to Telegram)")
-    print("✅ Render will keep this instance alive, no conflicts")
+    print("🤖 Bot is running...")
     app.run_polling()
 
 if __name__ == "__main__":
