@@ -10,9 +10,6 @@ import json
 import subprocess
 import os
 import sys
-import http.server
-import socketserver
-import threading
 
 username = ""
 num3 = ""
@@ -55661,18 +55658,6 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     print("🤖 Bot is running...")
-
-    def run_simple_http_server():
-    PORT = int(os.environ.get('PORT', 8080))
-    Handler = http.server.SimpleHTTPRequestHandler
-    
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"✅ Dummy HTTP server running on port {PORT}")
-        httpd.serve_forever()
-
-# Запускаем HTTP-сервер в фоне
-Thread(target=run_simple_http_server, daemon=True).start()
-    
     app.run_polling()
 
 if __name__ == "__main__":
