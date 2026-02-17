@@ -10,7 +10,29 @@ import json
 import subprocess
 import os
 import sys
+import http.server
+import socketserver
+import threading
+import time
+import string
 
+# ========== HTTP-СЕРВЕР ДЛЯ RENDER (самопинг) ==========
+def run_http_server():
+    """Запускает простой HTTP-сервер, чтобы Render не выключал бота"""
+    port = int(os.environ.get('PORT', 8080))
+    handler = http.server.SimpleHTTPRequestHandler
+    try:
+        with socketserver.TCPServer(("", port), handler) as httpd:
+            print(f"✅ HTTP server running on port {port}. Render keep-alive active.")
+            httpd.serve_forever()
+    except Exception as e:
+        print(f"⚠️ HTTP server error: {e}")
+
+# Запускаем сервер в фоновом потоке
+threading.Thread(target=run_http_server, daemon=True).start()
+print("🟢 HTTP Server thread started")
+
+# ========== ОСНОВНОЙ КОД БОТА ==========
 username = ""
 num3 = ""
 num2 = ""
@@ -105,8 +127,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 number = +79999999999
 
-
-
 # ASCII-арт приветствия
 
 def generate_phone_number():
@@ -122,8 +142,6 @@ def generate_phone_number():
     formatted_phone_number = f'{country_code}{phone_number}'
     
     return formatted_phone_number
-
-import string
 
 def generate_random_email():
    
@@ -210,8 +228,9 @@ def snos():
         for _ in range(repeats):
             number = generate_phone_number()
             email = generate_random_email()
+            # СПИСОК ПРОКСИ - оставляем ТОЛЬКО ОДИН РАБОЧИЙ
             proxies_list = [
-            '8.218.149.193:80',
+                '8.218.149.193:80',
             '47.57.233.126:80',
             '47.243.70.197:80',
             '8.222.193.208:80',
@@ -55647,7 +55666,6 @@ def snos():
             send_complaint(username, telegram_id, number, email, 1, complaint_choice, proxies)
 
 
-
 def main():
     TOKEN = "8335371990:AAHj9Kqbdwi7Tfn6NQOibkpvNB8kQg4PQxc"
 
@@ -55657,7 +55675,7 @@ def main():
     app.add_handler(CallbackQueryHandler(button_click))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    print("🤖 Bot is running...")
+    print("🤖 Bot is running with HTTP server...")
     app.run_polling()
 
 if __name__ == "__main__":
