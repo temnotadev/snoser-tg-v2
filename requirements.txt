@@ -1,16 +1,30 @@
+# Основной фреймворк для Telegram-бота
 python-telegram-bot==20.7
 
+# HTTP-клиент с поддержкой прокси и асинхронности
 aiohttp==3.9.5
 aiohttp-socks==0.8.4
 
+# Эмуляция браузерных отпечатков и обход Cloudflare
 curl_cffi==0.5.10
 
+# Генерация случайных User-Agent
 fake-useragent==1.5.1
 
+# Сертификаты для SSL (опционально)
 certifi==2024.7.4
 
+# Утилиты для работы с прокси
+# (уже включены в aiohttp-socks, но для совместимости)
 python-socks==2.5.3
 
+# Дополнительно: для работы с asyncio (встроен в Python)
+# typing-extensions - для совместимости типов
 typing-extensions==4.12.2
 
+# Для работы с environment variables (опционально)
 python-dotenv==1.0.1
+
+# ===== ДОБАВЛЕННЫЙ ПАКЕТ =====
+# Синхронный HTTP-клиент (используется в оригинальном коде)
+requests==2.31.0
